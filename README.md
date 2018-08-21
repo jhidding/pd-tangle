@@ -10,7 +10,7 @@ This `pandoc` filter relies on the use of *fenced code attributes*. To tangle a 
 
 ~~~markdown
 ``` {.bash file=src/count.sh}
-...
+   ...
 ```
 ~~~
 
@@ -20,7 +20,7 @@ A named code block is should have an identifier given:
 
 ~~~markdown
 ``` {.python #named-code-block}
-...
+   ...
 ```
 ~~~
 
