@@ -96,9 +96,9 @@ def ackermann(m, n):
 ```
 
 $$\begin{cases}
-n+1 & \mbox{if } m = 0 \\
-A(m-1, 1) & \mbox{if } m > 0 \mbox{ and } n = 0 \\
-A(m-1, A(m, n-1)) & \mbox{if } m > 0 \mbox{ and } n > 0.
+n+1 & {\rm if}~ m = 0 \\
+A(m-1, 1) & {\rm if }~ m > 0 ~{\rm and}~ n = 0 \\
+A(m-1, A(m, n-1)) & {\rm if}~ m > 0 ~{\rm and }~ n > 0.
 \end{cases}$$
 
 Then implement the body of the function
