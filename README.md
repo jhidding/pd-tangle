@@ -42,6 +42,13 @@ make test
 
 Copy the Lua files in the `scripts` directory to your own project and use and adapt the `Makefile` to absorb them into your workflow. I may in the future create a more user-friendly script.
 
+## TODO
+
+- Include syntax to append to existing named code blocks.
+- Work with multiple input files.
+- Update tangled files only where content changed.
+- Identify output of generated scripts (raw markdown, figures, etc.) and include them back into the document when generating the report.
+
 ## Complete Tangle Test
 
 The following code snippets are the testing suite for this Markdown tangler. To see their source look at this `README.md` in raw text.
@@ -76,12 +83,47 @@ def factorial(n):
     return reduce(mul, range(1, n + 1), 1)
 ```
 
-## TODO
+### Composing should preserve indentation
 
-- Include syntax to append to existing named code blocks.
-- Work with multiple input files.
-- Update tangled files only where content changed.
-- Identify output of generated scripts (raw markdown, figures, etc.) and include them back into the document when generating the report.
+We'll define the Ackermann function
+
+``` {.python file=test/ackermann.py}
+def ackermann(m, n):
+    <<ackermann-bounds>>
+    <<ackermann-body>>
+
+<<ackermann-test>>
+```
+
+$$\begin{cases}
+n+1 & \mbox{if } m = 0 \\
+A(m-1, 1) & \mbox{if } m > 0 \mbox{ and } n = 0 \\
+A(m-1, A(m, n-1)) & \mbox{if } m > 0 \mbox{ and } n > 0.
+\end{cases}$$
+
+Then implement the body of the function
+
+``` {.python #ackermann-body}
+if m == 0:
+    return n + 1
+elif n == 0:
+    return ackermann(m - 1, 1)
+else:
+    return ackermann(m - 1, ackermann(m, n - 1))
+```
+
+The function is not defined for values of $n < 0$ or $m <0$.
+
+``` {.python #ackermann-bounds}
+if m < 0 or n < 0:
+    raise ValueError("`n` and `m` should be > 0")
+```
+
+Let's test our Ackermann function
+
+``` {.python #ackermann-test}
+print("A(3, 5) = ", ackermann(3, 5))
+```
 
 ## Copying/Contributing
 
