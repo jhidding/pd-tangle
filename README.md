@@ -4,6 +4,8 @@ This is a PanDoc filter for extracting source code from Markdown files that were
 
 This Lua script will filter the Pandoc AST for `CodeBlock` entries and generate a plain text `bash` script that can be used to create the files defined in the input file.
 
+The resulting file tree is first generated in a temporary directory, after which this temporary directory is syncronized with the project directory. In the case of compiled languages this prevents you from having to recompile everything.
+
 ## Syntax
 
 This `pandoc` filter relies on the use of *fenced code attributes*. To tangle a code block to a file:
@@ -44,9 +46,7 @@ Copy the Lua files in the `scripts` directory to your own project and use and ad
 
 ## TODO
 
-- Include syntax to append to existing named code blocks.
 - Work with multiple input files.
-- Update tangled files only where content changed.
 - Identify output of generated scripts (raw markdown, figures, etc.) and include them back into the document when generating the report.
 
 ## Complete Tangle Test
@@ -123,6 +123,51 @@ Let's test our Ackermann function
 
 ``` {.python #ackermann-test}
 print("A(3, 5) = ", ackermann(3, 5))
+```
+
+### Repeated named entries are concatenated
+
+We will compute the first hundred primes using the ancient technique of Eratosthenes' sieve.
+
+``` {.python file=test/primes.py}
+<<primes-imports>>
+
+def primes(limit):
+    <<primes-definition>>
+
+<<primes-test>>
+```
+
+For this we will use NumPy.
+
+``` {.python #primes-imports}
+import numpy
+```
+
+The algorithm keeps a ledger of all numbers that have been identified as primes.
+
+``` {.python #primes-definition}
+is_prime = numpy.ones(limit + 1, dtype=numpy.bool)
+```
+
+If we encounter a number that is prime, all multiples of that number are not primes.
+
+``` {.python #primes-definition append=true}
+for n in range(2, int(limit**(1/2) + 1.5)):
+    if is_prime[n]:
+        is_prime[n*n::n] = 0
+```
+
+As a last step we convert the boolean array to an array of numbers.
+
+``` {.python #primes-definition append=true}
+return numpy.nonzero(is_prime)[0][2:]
+```
+
+Let's try it!
+
+``` {.python #primes-test}
+print("All primes < 100: ", primes(100))
 ```
 
 ## Copying/Contributing

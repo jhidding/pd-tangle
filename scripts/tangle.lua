@@ -22,15 +22,30 @@ local preamble = [[
 #!/bin/bash
 
 prepare() {
-    echo "creating '$1'"
+    echo "$1"
     mkdir -p $(dirname $1)
 }
 
+echo "Tangling ... "
+
+tangle_dir=$(mktemp -d -p /tmp tangle.XXXXXXXXXX)
+target_dir=$(pwd)
+
+cd "${tangle_dir}"
+]]
+
+local postamble = [[
+cd "${target_dir}"
+
+echo -e "\nSyncronising source files ..."
+rsync -vrcup ${tangle_dir}/* .
+rm -rf ${tangle_dir}
 ]]
 
 function CodeBlock (elem)
     if elem.identifier then
-        vars[elem.identifier] = elem.text
+        t = vars[elem.identifier] or ""
+        vars[elem.identifier] = t .. "\n" .. elem.text
     end
 
     for k, v in pairs(elem.attr[3]) do
@@ -79,5 +94,6 @@ function Pandoc (elem)
                 "EOF\n\n"
         table.insert(content, pandoc.Str(code))
     end
+    table.insert(content, pandoc.Str(postamble))
     return pandoc.Pandoc(pandoc.Plain(content))
 end
