@@ -28,7 +28,7 @@ prepare() {
 
 echo "Tangling ... "
 
-tangle_dir=$(mktemp -d -p /tmp tangle.XXXXXXXXXX)
+tangle_dir=$(mktemp -d /tmp/tangle.XXXXXXXXXX)
 target_dir=$(pwd)
 
 cd "${tangle_dir}"
@@ -39,6 +39,7 @@ cd "${target_dir}"
 
 echo -e "\nSyncronising source files ..."
 rsync -vrcup ${tangle_dir}/* .
+sync
 rm -rf ${tangle_dir}
 ]]
 
@@ -90,7 +91,7 @@ function Pandoc (elem)
     for filename, code in pairs(files) do
         code = "prepare " .. filename .. "\n" ..
                "cat > " .. filename .. " << EOF\n" ..
-                expandFile(filename):gsub("%$", "\\$"):gsub("`", "\\`") .. 
+                expandFile(filename):gsub("%$", "\\$"):gsub("`", "\\`") ..
                 "EOF\n\n"
         table.insert(content, pandoc.Str(code))
     end

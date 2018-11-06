@@ -4,8 +4,8 @@ body
     max-width:	600pt;
     background: #efefef;
     padding:	0 10pt 0 0;
-    font-family: "Cantarell", "Verdana", sans-serif;
-    /* font-family: "Bitstream Charter"; */
+    /* font-family: "Cantarell", "Verdana", sans-serif; */
+    font-family: "Bitstream Charter", serif;
     font-size: 14pt;
     counter-reset: h1;
 }
@@ -105,21 +105,24 @@ code
     left: unset;
 }
 
-figure 
+figure
 {
     border: solid 1px #aaa;
     border-radius: 5pt;
     padding: 10pt;
     background: white;
     box-shadow: 8pt 8pt 10pt 0pt #aaa;
+    text-align: center;
 }
 
 figcaption
 {
+    text-align: justify;
     font-style: italic;
 }
 
 figure img
 {
     width: 100%;
+    margin: 0 auto 0 auto;
 }
